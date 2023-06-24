@@ -3,20 +3,21 @@ import {
     HASH,
     INVALID_INPUT, OPERATION_FAILED,
     SHA256
-} from '../constants/commands.js';
+} from '../constants/consts.js';
 import crypto from 'crypto';
 import fs from 'fs';
 import utils from '../operations/utils/index.mjs';
 
 const {
     getPath,
-    checkIfDirExists
+    checkIfPathExists,
+    displayResult
 } = utils;
 
 const hashFile = async (currentDir, fileDir) => {
     const filePath = getPath(currentDir, fileDir);
 
-    if (!await checkIfDirExists(filePath)) {
+    if (!await checkIfPathExists(filePath)) {
         return FILE_NOT_EXISTS;
     }
 
@@ -32,13 +33,17 @@ const hashFile = async (currentDir, fileDir) => {
 }
 
 export const hashController = async (cmd, payload, currentDir) => {
-    if (!payload) {
-        return INVALID_INPUT;
+    if (!payload.length) {
+        displayResult( INVALID_INPUT);
+
+        return;
     }
 
     switch (cmd) {
         case HASH:
-            return hashFile(currentDir, payload[0]);
+            displayResult(await hashFile(currentDir, payload[0]));
+
+            return;
         default:
             return OPERATION_FAILED;
     }

@@ -9,8 +9,9 @@ import {
     HOMEDIR,
     ARCH,
     OS_OPERATIONS
-} from '../constants/commands.js';
+} from '../constants/consts.js';
 import os from 'os';
+import {displayResult} from "./utils/displayResult.js";
 
 const getEOL = () => {
     return JSON.stringify(os.EOL);
@@ -42,24 +43,36 @@ const getArch = () => {
     return process.arch;
 }
 export const osController = async (cmd, payload) => {
-    if (!payload || !OS_OPERATIONS.includes(payload)) {
-        return INVALID_INPUT;
-    }
-
     const payloadAsString = payload.join();
+
+    if (!payloadAsString || !OS_OPERATIONS.includes(payloadAsString)) {
+        displayResult(INVALID_INPUT);
+
+        return;
+    }
 
     switch (payloadAsString) {
         case EOL:
-            return getEOL();
+            displayResult(getEOL());
+
+            break;
         case CPUS:
             return getCPUS();
         case USERNAME:
-            return getUserName();
+            displayResult(getUserName());
+
+            break;
         case HOMEDIR:
-            return getHomedir();
+            displayResult(getHomedir());
+
+            break;
         case ARCH:
-            return getArch();
+            displayResult(getArch());
+
+            break;
         default:
-            return OPERATION_FAILED;
+            displayResult(OPERATION_FAILED);
+
+            return;
     }
 }

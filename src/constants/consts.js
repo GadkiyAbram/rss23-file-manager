@@ -50,6 +50,7 @@ export const INVALID_INPUT = 'Invalid input';
 export const OPERATION_FAILED = 'Operation failed';
 export const FILE_NOT_EXISTS = 'File not exists';
 export const FILE_ALREADY_EXISTS = 'File already exists';
+export const DIRECTORY_NOT_EXISTS = 'Directory not exists';
 
 // hash encoding
 export const SHA256 = 'sha256';

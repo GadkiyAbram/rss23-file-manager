@@ -7,22 +7,24 @@ import {
     OPERATION_FAILED,
     RM,
     RN
-} from '../constants/commands.js';
+} from '../constants/consts.js';
 import fs from 'fs';
 import utils from '../operations/utils/index.mjs';
 import path from 'path';
-import CurrentPath from '../userHandling/CurrentPath.js';
 
 const {
     getPath,
-    checkIfDirExists
+    checkIfPathExists,
+    getFirstArrayElem,
+    displayResult
 } = utils;
 
-const createFile = async (currentDir, fileName) => {
+const createFile = async (payload, currentDir) => {
     // const filePath = getPath(currentDir, fileName);
-    const filePath = getPath(CurrentPath.getCurrentPath(), fileName);
+    const fileName = getFirstArrayElem(payload);
+    const filePath = getPath(currentDir, fileName);
 
-    if (await checkIfDirExists(filePath)) {
+    if (await checkIfPathExists(filePath)) {
         console.log(OPERATION_FAILED);
 
         return;
@@ -31,10 +33,12 @@ const createFile = async (currentDir, fileName) => {
     return fs.writeFileSync(filePath, '');
 };
 
-const removeFile = async (currentDir, fileName) => {
+const removeFile = async (fileName, currentDir) => {
     const filePath = getPath(currentDir, fileName);
+    // const filePath = getPath(fileName);
+    // console.log(fileName, filePath);
 
-    const fileExists = await checkIfDirExists(filePath);
+    const fileExists = await checkIfPathExists(filePath);
 
     if (!fileExists) {
         console.log(INVALID_INPUT);
@@ -45,7 +49,13 @@ const removeFile = async (currentDir, fileName) => {
     return fs.unlinkSync(filePath);
 }
 
-const renameFile = async (currentDir, pathToPrevFile, fileNewName) => {
+const renameFile = async (payload, currentDir) => {
+    if (payload.length !== 2) {
+        return INVALID_INPUT;
+    }
+    const pathToPrevFile = payload[0];
+    const fileNewName = payload[1];
+
     const pathToFolder = getPath(currentDir, pathToPrevFile);
 
     const filePrevName = pathToFolder.split('/').pop();
@@ -58,8 +68,8 @@ const renameFile = async (currentDir, pathToPrevFile, fileNewName) => {
         fileToRenameExists,
         fileFinalExists
     ] = await Promise.all([
-        checkIfDirExists(filePathToRename),
-        checkIfDirExists(filePathRenamed)
+        checkIfPathExists(filePathToRename),
+        checkIfPathExists(filePathRenamed)
     ]);
 
     if (!fileToRenameExists) {
@@ -77,18 +87,25 @@ const renameFile = async (currentDir, pathToPrevFile, fileNewName) => {
     return fs.renameSync(filePathToRename, filePathRenamed);
 }
 
-const copyOrDeleteFile = async (currentDir, srcFileDir, distDir, deleteSrcFile = false) => {
+const copyOrDeleteFile = async (payload, currentDir, deleteSrcFile = false) => {
+    if (payload.length !== 2) {
+        return INVALID_INPUT;
+    }
+
+    const srcFileDir = payload[0];
+    const distDir = payload[1];
+
     const pathToSrcFolder = getPath(currentDir, srcFileDir);
     const fileName = pathToSrcFolder.split('/').pop();
     const pathToDistFolder = getPath(currentDir, distDir, fileName);
 
-    if (!await checkIfDirExists(pathToSrcFolder)) {
+    if (!await checkIfPathExists(pathToSrcFolder)) {
         console.log(FILE_NOT_EXISTS);
 
         return;
     }
 
-    if (await checkIfDirExists(pathToDistFolder)) {
+    if (await checkIfPathExists(pathToDistFolder)) {
         console.log(FILE_ALREADY_EXISTS);
 
         return;
@@ -105,16 +122,17 @@ const copyOrDeleteFile = async (currentDir, srcFileDir, distDir, deleteSrcFile =
     input.pipe(output);
 
     if (deleteSrcFile) {
-        await Promise.resolve(checkIfDirExists(pathToDistFolder)).then(() =>
+        await Promise.resolve(checkIfPathExists(pathToDistFolder)).then(() =>
             fs.unlinkSync(pathToSrcFolder));
     }
 }
 
-export const readFile = async (currentDir, fileDir) => {
+export const readFile = async (payload, currentDir) => {
     // const filePath = getPath(currentDir, fileDir);
-    const filePath = getPath(CurrentPath.getCurrentPath(), fileDir);
+    const fileDir = getFirstArrayElem(payload);
+    const filePath = getPath(currentDir, fileDir);
 
-    if (!await checkIfDirExists(filePath)) {
+    if (!await checkIfPathExists(filePath)) {
         console.log(OPERATION_FAILED);
 
         return;
@@ -126,7 +144,11 @@ export const readFile = async (currentDir, fileDir) => {
 
         readStream.on('error', (err) => reject(err));
         readStream.on('data', (chunk) => result += chunk);
-        readStream.on('end', () => resolve(result));
+        readStream.on('end', () => {
+            displayResult(result);
+
+            resolve(result)
+        });
     });
 }
 
@@ -137,17 +159,17 @@ export const filesController = async (cmd, payload, currentDir) => {
 
     switch (cmd) {
         case CAT:
-            return readFile(currentDir, payload[0]);
+            return readFile(payload, currentDir);
         case ADD:
-            return createFile(currentDir, payload[0]);
+            return createFile(payload, currentDir);
         case RN:
-            return renameFile(currentDir, payload[0], payload[1]);
+            return renameFile(payload, currentDir);
         case CP:
-            return copyOrDeleteFile(currentDir, payload[0], payload[1]);
+            return copyOrDeleteFile(payload, currentDir);
         case MV:
-            return copyOrDeleteFile(currentDir, payload[0], payload[1], true);
+            return copyOrDeleteFile(payload, currentDir, true);
         case RM:
-            return removeFile(currentDir, payload[0], payload[1]);
+            return removeFile(payload.shift(), currentDir);
         default:
             return OPERATION_FAILED;
     }

@@ -1,0 +1,1 @@
+export const displayResult = (result) => console.log(result.trim());

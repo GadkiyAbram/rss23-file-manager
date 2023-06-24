@@ -1,29 +1,8 @@
-import User from './userHandling/User.js';
-import {exec} from 'child_process';
-import {MOVE_DIRECTORY_DEFAULT_AND_PRINT} from './constants/commands.js';
+import User from './Entities/User.js';
+import {MOVE_DIRECTORY_DEFAULT_AND_PRINT} from './constants/consts.js';
 import {handleCommand} from './cmdController.js';
 import {execute} from './operations/nwd.js';
-import CurrentPath from './userHandling/CurrentPath.js';
-
-// const execute = async (command) => {
-//     return new Promise((resolve, reject) => {
-//         exec(command, (err, stdout, stderr) => {
-//             if (err) {
-//                 console.log(`error: ${err.message}`);
-//                 return;
-//             }
-//
-//             if (stderr) {
-//                 console.log(`stderr: ${stderr}`);
-//                 return;
-//             }
-//
-//             console.log(stdout);
-//
-//             resolve(stdout);
-//         })
-//     });
-// }
+import CurrentPath from './Entities/CurrentPath.js';
 
 const init = async (args) => {
     const userNameData = args[0].split('=');
@@ -43,12 +22,8 @@ const init = async (args) => {
 async function workingWithFM() {
     const {user, currentDir} = await init(process.argv.slice(2));
 
-    // console.log(`Welcome to the File Manager, ${user.getUserName()}!`);
-    // console.log(`You are currently in ${CurrentPath.getCurrentPath()}`);
-
     process.stdin.on('data', async (commandData) => {
-        // console.log(await handleCommand(commandData.toString().trim(), currentDir.toString().trim()) || '');
-        await handleCommand(commandData.toString().trim(), currentDir.toString().trim());
+        await handleCommand(commandData.toString().trim());
     });
 
     process.stdin.on('exit', () => {
