@@ -14,18 +14,23 @@ import CurrentPath from '../Entities/CurrentPath.js';
 const {
     getFilenameNoExt,
     checkIfPathExists,
-    getFilenameExt
+    getFilenameExt,
+    displayResult
 } = utils;
 
 const compressFile = async (fileToCompressPath, fileCompressedPath) => {
+    console.log(fileToCompressPath, fileCompressedPath);
     const fileNameCompressed = `${getFilenameExt(fileToCompressPath)}${BR}`
     const fileCompressedPathNew = getPath(fileCompressedPath, fileNameCompressed);
 
     if (
         !await checkIfPathExists(fileToCompressPath) ||
-        await checkIfPathExists(fileCompressedPathNew)
+        await checkIfPathExists(fileCompressedPathNew) ||
+        !await checkIfPathExists(fileCompressedPath)
     ) {
-        return FILE_ALREADY_EXISTS;
+        displayResult(FILE_ALREADY_EXISTS);
+
+        return;
     }
 
     return Promise.resolve(

@@ -31,7 +31,7 @@ export const execute = async (command) => {
                 return;
             }
 
-            console.log(`You are currently in ${stdout.trim()}`);
+            // console.log(`You are currently in ${stdout.trim()}`);
 
             resolve(stdout);
         })

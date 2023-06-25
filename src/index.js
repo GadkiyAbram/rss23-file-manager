@@ -15,6 +15,7 @@ const init = async (args) => {
 
     const currentDir = await execute(MOVE_DIRECTORY_DEFAULT_AND_PRINT) || process.cwd();
     CurrentPath.setCurrentPath(currentDir);
+    CurrentPath.printCurrentDirectory();
 
     return {
         user,
@@ -22,7 +23,7 @@ const init = async (args) => {
     };
 }
 
-const byeUser = (userName) => {
+const byeByeUser = (userName) => {
     console.log(`\nThank you for using File Manager, ${userName}, goodbye!`);
 }
 
@@ -33,15 +34,16 @@ async function workingWithFM() {
         const cmd = commandData.toString().trim();
 
         if (cmd === EXIT) {
-            byeUser(user.getUserName());
+            byeByeUser(user.getUserName());
             process.exit(0);
         }
 
         await handleCommand(commandData.toString().trim());
+        CurrentPath.printCurrentDirectory();
     });
 
     process.on('SIGINT', () => {
-        byeUser(user.getUserName());
+        byeByeUser(user.getUserName());
         process.exit(0);
     });
 }
