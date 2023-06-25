@@ -2,8 +2,10 @@ import {
     BR,
     COMPRESS,
     DECOMPRESS,
-    FILE_ALREADY_EXISTS, FILE_NOT_EXISTS,
-    INVALID_INPUT, OPERATION_FAILED
+    FILE_ALREADY_EXISTS,
+    FILE_NOT_EXISTS,
+    INVALID_INPUT,
+    OPERATION_FAILED
 } from '../constants/consts.js';
 import getPath from '../utils/getPath.js';
 import fs from 'fs';
@@ -19,7 +21,6 @@ const {
 } = utils;
 
 const compressFile = async (fileToCompressPath, fileCompressedPath) => {
-    console.log(fileToCompressPath, fileCompressedPath);
     const fileNameCompressed = `${getFilenameExt(fileToCompressPath)}${BR}`
     const fileCompressedPathNew = getPath(fileCompressedPath, fileNameCompressed);
 
