@@ -6,7 +6,7 @@ import {
 } from '../constants/consts.js';
 import crypto from 'crypto';
 import fs from 'fs';
-import utils from '../operations/utils/index.mjs';
+import utils from '../utils/index.mjs';
 
 const {
     getPath,

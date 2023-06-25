@@ -3,22 +3,27 @@ import {
     HASH,
     ZIP_OPERATIONS,
     OS,
-    NWD_OPERATIONS, INVALID_INPUT
+    NWD_OPERATIONS,
+    INVALID_INPUT
 } from './constants/consts.js';
-import {filesController} from './operations/files.js';
-import {hashController} from './operations/hash.js';
-import {zipController} from './operations/zip.js';
-import {osController} from './operations/os.js';
-import {nwdController} from './operations/nwd.js';
 import CurrentPath from './Entities/CurrentPath.js';
-import {displayResult} from "./operations/utils/displayResult.js";
+import controllers from './controllers/index.mjs';
+import utils from './utils/index.mjs';
+
+const {
+    filesController,
+    hashController,
+    zipController,
+    osController,
+    nwdController
+} = controllers;
+const {displayResult} = utils;
 
 export const handleCommand = async (commandData) => {
     const cmdDataAsArray = commandData.split(' ');
     const cmd = cmdDataAsArray.shift();
     const currentDir = CurrentPath.getCurrentPath();
 
-    // const payload = cmdDataAsArray.slice(1);
     const payload = cmdDataAsArray;
 
     if (NWD_OPERATIONS.includes(cmd)) {

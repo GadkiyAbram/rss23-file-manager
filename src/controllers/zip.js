@@ -5,10 +5,10 @@ import {
     FILE_ALREADY_EXISTS, FILE_NOT_EXISTS,
     INVALID_INPUT, OPERATION_FAILED
 } from '../constants/consts.js';
-import getPath from './utils/getPath.js';
+import getPath from '../utils/getPath.js';
 import fs from 'fs';
 import zlib from 'zlib';
-import utils from './utils/index.mjs';
+import utils from '../utils/index.mjs';
 import CurrentPath from '../Entities/CurrentPath.js';
 
 const {

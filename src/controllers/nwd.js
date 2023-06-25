@@ -10,10 +10,10 @@ import {
     UP
 } from '../constants/consts.js';
 import {exec} from 'child_process';
-import getPath from './utils/getPath.js';
+import getPath from '../utils/getPath.js';
 import CurrentPath from '../Entities/CurrentPath.js';
 import fs from 'fs';
-import utils from './utils/index.mjs';
+import utils from '../utils/index.mjs';
 
 const {
     checkIfPathExists,

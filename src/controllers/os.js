@@ -11,7 +11,7 @@ import {
     OS_OPERATIONS
 } from '../constants/consts.js';
 import os from 'os';
-import {displayResult} from "./utils/displayResult.js";
+import {displayResult} from "../utils/displayResult.js";
 
 const getEOL = () => {
     return JSON.stringify(os.EOL);

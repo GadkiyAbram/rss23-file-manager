@@ -57,3 +57,6 @@ export const SHA256 = 'sha256';
 
 // ext
 export const BR = '.br';
+
+// exit
+export const EXIT = '.exit';

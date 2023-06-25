@@ -9,7 +9,7 @@ import {
     RN
 } from '../constants/consts.js';
 import fs from 'fs';
-import utils from '../operations/utils/index.mjs';
+import utils from '../utils/index.mjs';
 import path from 'path';
 
 const {
@@ -20,7 +20,6 @@ const {
 } = utils;
 
 const createFile = async (payload, currentDir) => {
-    // const filePath = getPath(currentDir, fileName);
     const fileName = getFirstArrayElem(payload);
     const filePath = getPath(currentDir, fileName);
 
@@ -35,8 +34,6 @@ const createFile = async (payload, currentDir) => {
 
 const removeFile = async (fileName, currentDir) => {
     const filePath = getPath(currentDir, fileName);
-    // const filePath = getPath(fileName);
-    // console.log(fileName, filePath);
 
     const fileExists = await checkIfPathExists(filePath);
 
@@ -128,7 +125,6 @@ const copyOrDeleteFile = async (payload, currentDir, deleteSrcFile = false) => {
 }
 
 export const readFile = async (payload, currentDir) => {
-    // const filePath = getPath(currentDir, fileDir);
     const fileDir = getFirstArrayElem(payload);
     const filePath = getPath(currentDir, fileDir);
 
