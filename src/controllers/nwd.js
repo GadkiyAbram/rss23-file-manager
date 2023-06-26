@@ -7,6 +7,7 @@ import {
     FILE,
     INVALID_INPUT,
     LS,
+    OPERATION_FAILED,
     UP
 } from '../constants/consts.js';
 import {exec} from 'child_process';
@@ -58,7 +59,6 @@ const prepareTableData = (itemsData, dirPath, needleType) => {
 };
 
 const navigateToDir = async (cmd, dirPath = '', currentDir) => {
-    // const fullPath = getPath(CurrentPath.getCurrentPath(), dirPath);
     const fullPath = getPath(currentDir, dirPath);
 
     const cmdFull = `${cmd} ${fullPath} ${AND_PWD}`;
@@ -69,9 +69,14 @@ const navigateToDir = async (cmd, dirPath = '', currentDir) => {
         return;
     }
 
-    const result = await execute(cmdFull);
+    let result = '';
 
-    CurrentPath.setCurrentPath(result);
+    try {
+        result = await execute(cmdFull);
+        CurrentPath.setCurrentPath(result);
+    } catch (_) {
+        return OPERATION_FAILED;
+    }
 
     return result;
 }
