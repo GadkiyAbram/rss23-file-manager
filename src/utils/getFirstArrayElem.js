@@ -1,0 +1,1 @@
+export const getFirstArrayElem = (arr) => arr?.shift();
